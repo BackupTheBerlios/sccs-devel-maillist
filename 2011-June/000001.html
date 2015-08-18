@@ -1,0 +1,213 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Sccs-devel] SCCS-1.1beta3 ready
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/sccs-devel/2011-June/index.html" >
+   <LINK REL="made" HREF="mailto:sccs-devel%40lists.berlios.de?Subject=Re%3A%20%5BSccs-devel%5D%20SCCS-1.1beta3%20ready&In-Reply-To=%3C4de6431c.Ht8/%2BS8bJtOP8pTO%25Joerg.Schilling%40fokus.fraunhofer.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   
+   <LINK REL="Next"  HREF="000002.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Sccs-devel] SCCS-1.1beta3 ready</H1>
+    <B>Joerg Schilling</B> 
+    <A HREF="mailto:sccs-devel%40lists.berlios.de?Subject=Re%3A%20%5BSccs-devel%5D%20SCCS-1.1beta3%20ready&In-Reply-To=%3C4de6431c.Ht8/%2BS8bJtOP8pTO%25Joerg.Schilling%40fokus.fraunhofer.de%3E"
+       TITLE="[Sccs-devel] SCCS-1.1beta3 ready">Joerg.Schilling at fokus.fraunhofer.de
+       </A><BR>
+    <I>Wed Jun  1 15:48:12 CEST 2011</I>
+    <P><UL>
+        
+        <LI>Next message: <A HREF="000002.html">[Sccs-devel] SCCS beta5 ready
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#1">[ date ]</a>
+              <a href="thread.html#1">[ thread ]</a>
+              <a href="subject.html#1">[ subject ]</a>
+              <a href="author.html#1">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>A new step towards the next final release is ready.
+
+
+
+Please note that this SCCS version and all our earlier versions are based on
+what AT&amp;T called SCCS-5.0.
+
+This is why the final version of this release will be called SCCS-5.1.
+
+SCCS-5.1 is a mature and highly portable variant created from the original AT&amp;T
+SCCS sources as supplied by Sun Microsystems in December 2006 on my request.
+SCCS-5.1 introduces a few enhancements to the SCCS history file format that are
+all compatible with other SCCS implementations (SCCS from SCO implements a clash
+with the 'x' history file flag and may cause related SCCS-5.1 files to be
+extracted with the executabl bit on). I recommend to replace SCO SCCS by this
+current SCCS as SCO SCCS is based on older source code versions that is known
+to have other bugs.
+
+There has been a SCCS history file format change when switching from SCCS-3.0
+to SCCS-4.0 on February 22 1977. Since then, the file format was kept the same.
+SCCS-6.0 will introduce a new SCCS history file format that causes historic SCCS
+implementations to abort (to prevent file corruption) but that can be easily
+converted back into a SCCS-5.x history file using a conversion program.
+This conversion will not cause a loss of information as the new information will
+be encoded as special comment that is accepted by all other SCCS implementations
+except for currently &quot;CSSC&quot;. The weave delta formatas introduced by
+Marc J. Rochkind at Bell Labs seems to be the best way of dealing with deltas 
+and branches and thus will be retained in SCCS-6.0. The planned enhancements for
+SCCS-6.0 are:
+
+
+	.... please read the file &quot;AN-1.1&quot; from the distribution for more
+	information
+
+
+
+------------ Included in Beta-3
+
+-	SCCS admin no longer silently removes flags from the range 'A'..'Z'
+	from the SCCS history file. SCCS admin now aborts in case that there
+	is a flag in the range 'A'..'Z'. This is not a problem, as there is
+	no known SCCS implementation that currently uses uppercase flags.
+	Extremely outdated BitKeeper versions from before 1998 did.... but they
+	do no longer exist.
+
+-	SCCS &quot;admin -fy s.foo&quot; now not only turns off keyword expansion but also
+	turns off the &quot;No iy keyword&quot; warning for &quot;admin&quot;, &quot;delta&quot; and &quot;get&quot;.
+
+-	SCCS &quot;admin&quot; and &quot;delta&quot; now correctly check for expanded keywords the
+	same way as the enhanced &quot;get&quot; command does.
+
+-	SCCS get now implements a new -o (original file date) option for
+	orthogonality with the -o flag already introduced in &quot;admin&quot; and
+	&quot;delta&quot;.
+
+-	The sccsfile.4 and sccs-admin.1 man pages now mention the optional
+	parameter to the 'i' flag in the SCCS history file introduced by Sun.
+	This parameter permits to require a specific SCCS keyword string
+	to be expanded in order to prevent to deny the related &quot;admin&quot;,
+	&quot;delta&quot; or &quot;get&quot; command.
+	The parameter to the 'i' flag was introuced by Sun but it is also
+	available on HP-UX and AIX.
+
+-	The sccs-get.1 man page now mentions the -L option introduced by Sun.
+
+-	The diff(1) man page has been added
+
+-	The SCCS prt command now correctly adds a newline when printing the
+	&quot;encoded&quot; ('e') flag via prt -f ...
+
+-	The SCCS prt command now prints labels for the 's', 'x' and 'y' flags
+	with prt -f. The label for 'x' is &quot;extensions&quot;, the labels for 's'
+	and 'y' are the same labels as used by the &quot;prs&quot; program.
+
+-	All SCCS programs are now able to deal with time stamps in the range
+	2038 .. 2068 in history-files even with 32 bit programs that use a
+	signed int for time_t. This however does not affect problems caused
+	by the OS on such platforms.
+
+-	The switch to 4-digit year numbers is done at January 1 2038 for the
+	s-file and at January 1 2069 for all files that are mentioned in
+	POSIX (e.g. the l-file and the p-file). The latter is done to follow
+	the POSIX standard. The first is possible al POSIX does not define
+	the file format for the s-file.
+
+-	date_ab() now supports reading dates &lt; 1969 in 4-digit mode from
+	delta entries in SCCS history files.
+
+-	date_ba() now always prints 2-digit year numbers even for e.g. 2120.
+
+-	SCCS now supports to specify cutoff dates using 4-digit year numbers
+	by specifying something like:
+
+	yyyy/[mm[dd[hh[mm[ss]]]]]
+
+-	The man pages sccs-get.1 and sccs-prs.1 now mention how to specify
+	a 4-digit year with a cutoff date.
+
+-	The SCCS admin program now permits to specify binary mode via -b
+	and -n even in case that the new SCCS history file is not initialized
+	with -i. A history file created with &quot;admin -n s.foo&quot; will still
+	not include the 'e' flag at all. James Youngman promised to permit
+	&quot;admin -r2 -n s.foo&quot; with CSSC in return....
+
+-	The SCCS commands now switches to 4 digit year numbers in SCCS files
+	when the year is &lt; 1969 or if the year is &gt; 2068. This switch is
+	done for all files, as this is outside the time range mentioned by
+	POSIX.
+
+-	The SCCS prs command now prints &quot;extensions&quot; for the 'x' flag
+
+-	SCCS &quot;sccs unedit&quot; now also works on Linux. The problem was
+	caused by using /tmp/sccsXXXXX instead of /tmp/sccsXXXXXX for mkstemp()
+
+-	A test suite has been added in directory &quot;sccs/tests&quot;.
+	The test suite contains two parts:
+
+	-	1188 tests taken from CSSC (James Youngman)
+		The related tests are in &quot;sccs/tests/cssctests&quot;
+
+	-	Additional tests from the SCCS project (Joerg Schilling).
+		The related tests are in &quot;sccs/tests/sccstests&quot;
+
+	The tests have recently been run with success on SunOS, AIX, CYGWIN,
+	HP-UX, Linux, Mac OS X.
+
+	Please run tests on the other OS and report.
+
+	To run the test, just type:
+
+		smake
+
+	from the directory &quot;sccs/tests&quot; after you compiled SCCS at top level.
+	For more information, have a look at: sccs/tests/README
+
+	Check the output for problems that are flagged by the word FAIL or XFAIL.
+
+	Please report any problems!
+
+	Note that some operating systems do not support everything.
+
+	-	HP-UX will e.g. fail on some tests with &quot;Arg list too long&quot;.
+
+	-	AIX will fail with all dates before 1970 January 1
+		as the time functions in libc return -1 or such dates
+		and this will lead to dates like: 69/12/31 23:59:59
+
+J&#246;rg
+
+-- 
+ EMail:<A HREF="https://lists.berlios.de/mailman/listinfo/sccs-devel">joerg at schily.isdn.cs.tu-berlin.de</A> (home) J&#246;rg Schilling D-13353 Berlin
+       <A HREF="https://lists.berlios.de/mailman/listinfo/sccs-devel">js at cs.tu-berlin.de</A>                (uni)  
+       <A HREF="https://lists.berlios.de/mailman/listinfo/sccs-devel">joerg.schilling at fokus.fraunhofer.de</A> (work) Blog: <A HREF="http://schily.blogspot.com/">http://schily.blogspot.com/</A>
+ URL:  <A HREF="http://cdrecord.berlios.de/private/">http://cdrecord.berlios.de/private/</A> <A HREF="ftp://ftp.berlios.de/pub/schily">ftp://ftp.berlios.de/pub/schily</A>
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	
+	<LI>Next message: <A HREF="000002.html">[Sccs-devel] SCCS beta5 ready
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#1">[ date ]</a>
+              <a href="thread.html#1">[ thread ]</a>
+              <a href="subject.html#1">[ subject ]</a>
+              <a href="author.html#1">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/sccs-devel">More information about the Sccs-devel
+mailing list</a><br>
+</body></html>

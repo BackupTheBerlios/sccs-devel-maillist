@@ -1,0 +1,37 @@
+From Joerg.Schilling at fokus.fraunhofer.de  Thu Sep  1 15:54:05 2011
+From: Joerg.Schilling at fokus.fraunhofer.de (Joerg Schilling)
+Date: Thu, 01 Sep 2011 15:54:05 +0200
+Subject: [Sccs-devel] SCCS v6 design discussuion
+Message-ID: <4e5f8e7d.Q6FVICXI/YKSpS5Q%Joerg.Schilling@fokus.fraunhofer.de>
+
+Hi all,
+
+we are currently discussing the final design of the data structures for SCCS v6.
+
+SCCS v6 will be a SCCS bases and SCCS/POSIX compatible extension that turns 
+SCCS into a distributed source control system that supports changesets instead 
+of just single file revisioning.
+
+The SCCS sources did get a major rewrite in the recent past and SCCS is now 
+more than 2.5 times faster than Sun SCCS and comsumes less than 1/4.7th of the 
+CPU time needed by Sun SCCS.
+
+>From my current tests SCCS has the chance to become by far the fastest 
+distributed OSS source control system - even if I later add support for 
+compressed archives.
+
+I am currently discussing the new data structures on the phone with a friend 
+but I would love to have a discussion with more interested people in order to 
+make SCCS fit best the needs of people.
+
+Please give a note when you are interested to participate inthe discussion.
+
+J?rg
+
+-- 
+ EMail:joerg at schily.isdn.cs.tu-berlin.de (home) J?rg Schilling D-13353 Berlin
+       js at cs.tu-berlin.de                (uni)  
+       joerg.schilling at fokus.fraunhofer.de (work) Blog: http://schily.blogspot.com/
+ URL:  http://cdrecord.berlios.de/private/ ftp://ftp.berlios.de/pub/schily
+
+

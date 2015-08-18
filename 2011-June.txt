@@ -1,0 +1,229 @@
+From Joerg.Schilling at fokus.fraunhofer.de  Wed Jun  1 15:48:12 2011
+From: Joerg.Schilling at fokus.fraunhofer.de (Joerg Schilling)
+Date: Wed, 01 Jun 2011 15:48:12 +0200
+Subject: [Sccs-devel] SCCS-1.1beta3 ready
+Message-ID: <4de6431c.Ht8/+S8bJtOP8pTO%Joerg.Schilling@fokus.fraunhofer.de>
+
+A new step towards the next final release is ready.
+
+
+
+Please note that this SCCS version and all our earlier versions are based on
+what AT&T called SCCS-5.0.
+
+This is why the final version of this release will be called SCCS-5.1.
+
+SCCS-5.1 is a mature and highly portable variant created from the original AT&T
+SCCS sources as supplied by Sun Microsystems in December 2006 on my request.
+SCCS-5.1 introduces a few enhancements to the SCCS history file format that are
+all compatible with other SCCS implementations (SCCS from SCO implements a clash
+with the 'x' history file flag and may cause related SCCS-5.1 files to be
+extracted with the executabl bit on). I recommend to replace SCO SCCS by this
+current SCCS as SCO SCCS is based on older source code versions that is known
+to have other bugs.
+
+There has been a SCCS history file format change when switching from SCCS-3.0
+to SCCS-4.0 on February 22 1977. Since then, the file format was kept the same.
+SCCS-6.0 will introduce a new SCCS history file format that causes historic SCCS
+implementations to abort (to prevent file corruption) but that can be easily
+converted back into a SCCS-5.x history file using a conversion program.
+This conversion will not cause a loss of information as the new information will
+be encoded as special comment that is accepted by all other SCCS implementations
+except for currently "CSSC". The weave delta formatas introduced by
+Marc J. Rochkind at Bell Labs seems to be the best way of dealing with deltas 
+and branches and thus will be retained in SCCS-6.0. The planned enhancements for
+SCCS-6.0 are:
+
+
+	.... please read the file "AN-1.1" from the distribution for more
+	information
+
+
+
+------------ Included in Beta-3
+
+-	SCCS admin no longer silently removes flags from the range 'A'..'Z'
+	from the SCCS history file. SCCS admin now aborts in case that there
+	is a flag in the range 'A'..'Z'. This is not a problem, as there is
+	no known SCCS implementation that currently uses uppercase flags.
+	Extremely outdated BitKeeper versions from before 1998 did.... but they
+	do no longer exist.
+
+-	SCCS "admin -fy s.foo" now not only turns off keyword expansion but also
+	turns off the "No iy keyword" warning for "admin", "delta" and "get".
+
+-	SCCS "admin" and "delta" now correctly check for expanded keywords the
+	same way as the enhanced "get" command does.
+
+-	SCCS get now implements a new -o (original file date) option for
+	orthogonality with the -o flag already introduced in "admin" and
+	"delta".
+
+-	The sccsfile.4 and sccs-admin.1 man pages now mention the optional
+	parameter to the 'i' flag in the SCCS history file introduced by Sun.
+	This parameter permits to require a specific SCCS keyword string
+	to be expanded in order to prevent to deny the related "admin",
+	"delta" or "get" command.
+	The parameter to the 'i' flag was introuced by Sun but it is also
+	available on HP-UX and AIX.
+
+-	The sccs-get.1 man page now mentions the -L option introduced by Sun.
+
+-	The diff(1) man page has been added
+
+-	The SCCS prt command now correctly adds a newline when printing the
+	"encoded" ('e') flag via prt -f ...
+
+-	The SCCS prt command now prints labels for the 's', 'x' and 'y' flags
+	with prt -f. The label for 'x' is "extensions", the labels for 's'
+	and 'y' are the same labels as used by the "prs" program.
+
+-	All SCCS programs are now able to deal with time stamps in the range
+	2038 .. 2068 in history-files even with 32 bit programs that use a
+	signed int for time_t. This however does not affect problems caused
+	by the OS on such platforms.
+
+-	The switch to 4-digit year numbers is done at January 1 2038 for the
+	s-file and at January 1 2069 for all files that are mentioned in
+	POSIX (e.g. the l-file and the p-file). The latter is done to follow
+	the POSIX standard. The first is possible al POSIX does not define
+	the file format for the s-file.
+
+-	date_ab() now supports reading dates < 1969 in 4-digit mode from
+	delta entries in SCCS history files.
+
+-	date_ba() now always prints 2-digit year numbers even for e.g. 2120.
+
+-	SCCS now supports to specify cutoff dates using 4-digit year numbers
+	by specifying something like:
+
+	yyyy/[mm[dd[hh[mm[ss]]]]]
+
+-	The man pages sccs-get.1 and sccs-prs.1 now mention how to specify
+	a 4-digit year with a cutoff date.
+
+-	The SCCS admin program now permits to specify binary mode via -b
+	and -n even in case that the new SCCS history file is not initialized
+	with -i. A history file created with "admin -n s.foo" will still
+	not include the 'e' flag at all. James Youngman promised to permit
+	"admin -r2 -n s.foo" with CSSC in return....
+
+-	The SCCS commands now switches to 4 digit year numbers in SCCS files
+	when the year is < 1969 or if the year is > 2068. This switch is
+	done for all files, as this is outside the time range mentioned by
+	POSIX.
+
+-	The SCCS prs command now prints "extensions" for the 'x' flag
+
+-	SCCS "sccs unedit" now also works on Linux. The problem was
+	caused by using /tmp/sccsXXXXX instead of /tmp/sccsXXXXXX for mkstemp()
+
+-	A test suite has been added in directory "sccs/tests".
+	The test suite contains two parts:
+
+	-	1188 tests taken from CSSC (James Youngman)
+		The related tests are in "sccs/tests/cssctests"
+
+	-	Additional tests from the SCCS project (Joerg Schilling).
+		The related tests are in "sccs/tests/sccstests"
+
+	The tests have recently been run with success on SunOS, AIX, CYGWIN,
+	HP-UX, Linux, Mac OS X.
+
+	Please run tests on the other OS and report.
+
+	To run the test, just type:
+
+		smake
+
+	from the directory "sccs/tests" after you compiled SCCS at top level.
+	For more information, have a look at: sccs/tests/README
+
+	Check the output for problems that are flagged by the word FAIL or XFAIL.
+
+	Please report any problems!
+
+	Note that some operating systems do not support everything.
+
+	-	HP-UX will e.g. fail on some tests with "Arg list too long".
+
+	-	AIX will fail with all dates before 1970 January 1
+		as the time functions in libc return -1 or such dates
+		and this will lead to dates like: 69/12/31 23:59:59
+
+J?rg
+
+-- 
+ EMail:joerg at schily.isdn.cs.tu-berlin.de (home) J?rg Schilling D-13353 Berlin
+       js at cs.tu-berlin.de                (uni)  
+       joerg.schilling at fokus.fraunhofer.de (work) Blog: http://schily.blogspot.com/
+ URL:  http://cdrecord.berlios.de/private/ ftp://ftp.berlios.de/pub/schily
+
+
+From Joerg.Schilling at fokus.fraunhofer.de  Tue Jun 28 12:12:19 2011
+From: Joerg.Schilling at fokus.fraunhofer.de (Joerg Schilling)
+Date: Tue, 28 Jun 2011 12:12:19 +0200
+Subject: [Sccs-devel] SCCS beta5 ready
+Message-ID: <4e09a903.CnXbRcn22IRMYiWz%Joerg.Schilling@fokus.fraunhofer.de>
+
+This is most likely the last beta before the next major release 5.1
+
+-       Some changes to make GCC quiet with new code 
+ 
+-       New autoconf tests on whether printf supoorts %lld and %jd 
+ 
+-       bdiff and the SCCS basic command now try to avoid to link against 
+	printf from libschily in case that the lical libc supports
+	printf("%lld") and printf("%jd") 
+ 
+-       SCCS delta is now able using a faster method to close open files before 
+        calling "diff". 
+ 
+-       The Makefile System is now able to switch gmake-3.82 into a more POSIX  
+        compliant mode to tell the shell to report problems back to gmake. 
+ 
+-       A new rule RULES/profiled.lnk allows to call: 
+ 
+        smake COPTX=-pg LDOPTX=-pg LINKMODE=profiled 
+ 
+        to create binaries that use gprof. 
+ 
+-       libmpw now has a new funktion zrealloc() that calls malloc() 
+        when the first realloc() parameter is NULL. This is needed on 
+        platforms that do not support realloc(NULL, size) 
+ 
+-       A work around for the performance problems from the baroque Linux 
+        stdio implementaion was introduced. This workaround causes a memory 
+        leak but this is less a problem then the percormance. 
+ 
+-       A workaround for the performance problems in DST support from 
+        libc::mktime() on platforms (like AIX. Linux and SunOS-4.x) has been 
+        introduced. SCCS now converts the ASCII time notation from the history 
+        file into a GMT based time_t in case that get(1) does not need to  
+        deal with time stamps. 
+ 
+-       For the same reason as before, delta(1) now also tries to avoid to do 
+        local time conversions. 
+ 
+        We are now able to confirm that claims that RCS is supposed to be 
+	faster than SCCS are no more than a myth. 
+
+        With these optimzations in effect, we are now again able to prove that 
+        SCCS is always faster than RCS or CVS regardless of what OS is being 
+        used. The most frequently used SCCS command is get(1) and get(1) is 
+        typically 3 times faster than RCS co(1) when retrieving the most recent 
+        version and up to 6 times faster than co(1) when retrieving older 
+        revisions. 
+ 
+        Note that all optimizations affect only parts of SCCS that have been  
+        introduced past 1986. So we did just allow to see how fast SCCS has  
+        been in 1980 already.  
+J?rg
+
+-- 
+ EMail:joerg at schily.isdn.cs.tu-berlin.de (home) J?rg Schilling D-13353 Berlin
+       js at cs.tu-berlin.de                (uni)  
+       joerg.schilling at fokus.fraunhofer.de (work) Blog: http://schily.blogspot.com/
+ URL:  http://cdrecord.berlios.de/private/ ftp://ftp.berlios.de/pub/schily
+
+

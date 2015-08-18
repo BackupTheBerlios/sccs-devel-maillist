@@ -1,0 +1,36 @@
+From Joerg.Schilling at fokus.fraunhofer.de  Thu Nov  3 12:23:36 2011
+From: Joerg.Schilling at fokus.fraunhofer.de (Joerg Schilling)
+Date: Thu, 03 Nov 2011 12:23:36 +0100
+Subject: [Sccs-devel] New SCCS version 5.06 available
+Message-ID: <4eb279b8.1mlnlZOzNItSjP0y%Joerg.Schilling@fokus.fraunhofer.de>
+
+Hi all, 
+
+sccs 5.06 is out and it now incorporates most of the fundamental new stuff that 
+is needed to finally implement the code to support change-sets in SCCS.
+
+This implementation will re-use some of the ideas found in the BitKeeper 
+repositories for Linux:
+
+	ftp://82.96.64.7/pub/linux/kernel/people/marcelo/linux-2.4/
+
+As I did make many performance tests that check whether I am on the right way 
+to make SCCS able to support large projects over more than 30 years of 
+development, the implementation for the change-set bracketing may now start.
+
+We still need a portable replacement for the syscall "resolvepath()" on Solaris 
+to be able to correctly deal with all possible degenerated path arguments....
+
+
+If you like to discuss the concepts, you are welcome to ask ot discuss in this 
+mailing list.
+
+J?rg
+
+-- 
+ EMail:joerg at schily.isdn.cs.tu-berlin.de (home) J?rg Schilling D-13353 Berlin
+       js at cs.tu-berlin.de                (uni)  
+       joerg.schilling at fokus.fraunhofer.de (work) Blog: http://schily.blogspot.com/
+ URL:  http://cdrecord.berlios.de/private/ ftp://ftp.berlios.de/pub/schily
+
+

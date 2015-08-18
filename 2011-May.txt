@@ -1,0 +1,367 @@
+From Joerg.Schilling at fokus.fraunhofer.de  Thu May 19 13:50:29 2011
+From: Joerg.Schilling at fokus.fraunhofer.de (Joerg Schilling)
+Date: Thu, 19 May 2011 13:50:29 +0200
+Subject: [Sccs-devel] SCCS-1.1beta2 ready
+Message-ID: <4dd50405.CDnuexQ1+GKzic3H%Joerg.Schilling@fokus.fraunhofer.de>
+
+
+New features of SCCS-1.1:
+
+Please note that this SCCS version and all our earlier versions are based on
+what AT&T called SCCS-5.0.
+
+This is why the final version of this release will be called SCCS-5.1.
+
+SCCS-5.1 is a mature and highly portable variant created from the original AT&T
+SCCS sources as supplied by Sun Microsystems in December 2006 on my request.
+SCCS-5.1 introduces a few enhancements to the SCCS history file format that are
+all compatible with other SCCS implementations (SCCS from SCO implements a clash
+with the 'x' history file flag and may cause related SCCS-5.1 files to be
+extracted with the executabl bit on). I recommend to replace SCO SCCS by this
+current SCCS as SCO SCCS is based on older source code versions that is known
+to have other bugs.
+
+There has been a SCCS history file format change when switching from SCCS-3.0
+to SCCS-4.0 on February 22 1977. Since then, the file format was kept the same.
+SCCS-6.0 will introduce a new SCCS history file format that causes historic SCCS
+implementations to abort (to prevent file corruption) but that can be easily
+converted back into a SCCS-5.x history file using a conversion program.
+This conversion will however cause a loss of information. The weave delta format
+as introduced by Marc J. Rochkind at Bell Labs seems to be the best way of
+dealing with deltas and branches and thus will be retained in SCCS-6.0. The
+planned enhancements for SCCS-6.0 are:
+
+-	New and better checksum (this is intended to cause historic SCCS versions
+	to abort when reading the first line already).
+
+-	Introducing a global project tree related lock file to allow SCCS to
+	support atomic updates on whole projects and not only on single files.
+	This is why we need to cause older SCCS implementations to abort as they
+	otherwise would ignore the global lock and modify single files from the
+	project.
+
+-	Switching all time stamps in SCCS history files and p.* files to GMT in
+	order to make SCCS able to be used in a networked environment.
+	Previous versions use local time for time stamps.
+
+-	The ability to have compressed delta weave data will cause the SCCS 
+	history files to be typically smaller than the "gotten" release of
+	the file.
+
+-	A new "escaped delta weave" format will permit ^A to appear at the
+	beginning of lines in text files. This format allows any file content
+	that does not include null bytes.
+
+-	A new subcommand "sccs init" will mark a project's root directory and
+	switch SCCS into "project mode" as opposed to the historic
+	"single file mode".
+
+-	A new subcommand "sccs clone" will permit to import projects from a
+	distributed SCCS server.
+
+-	A new subcommand "sccs pull" will allow to update a private copy from
+	the state of a distributed SCCS server.
+
+-	A new subcommand "sccs push" will allow to update a distributed SCCS
+	server from a private copy.
+
+-	A new subcommand "sccs export" will export changesets as annotated
+	patch files.
+
+-	A new subcommand "sccs import" will import annotated patch files.
+
+There are only a few additional features that could turn SCCS into a distributed
+Source Code Control System.
+
+Please join the discussion mainling list for the development of enhancements on:
+
+	http://lists.berlios.de/mailman/listinfo/sccs-devel
+	sccs-devel at lists.berlios.de
+
+
+------------ Included in Beta-1
+
+-	Several enhancements to the makefile system.
+
+-	The makefile system now supports to compile using Sun Studio on Linux
+
+-	-I. removed from the makefile system
+
+-	The makefile system now better handles the LD_RUN_PATH property
+
+-	Support for HAIKU was added
+
+-	Support for AIX was added
+
+-	Support for IRIX was added
+
+-	Support for VMS was added
+
+-	Floating point support for AIX now supports newer versions of AIX
+
+-	libgetopt separated from libschily
+
+-	libschily is now delivered complete
+
+-	New library libfind to support sccs -R
+
+-	sccs(1) now correctly calls readdir(3) to skip "." and ".."
+
+-	sccs(1) now uses strsignal(3) where available
+
+-	sccs(1) now supports a flag -R for recursive operation on most
+	commands.
+
+	Most subcommands now support the -R option (before the subcommand).
+
+	sccs -R tell		Lists all currently edited files
+	sccs -R get		Get's everytrhing from SCCS/s. files
+	sccs -R diffs		shows the diffs for all edited files
+	sccs -R diffs ` sccs -R tell -U ` shows the diffs for all files edited by you
+	sccs -R delget		performs a "delta" and a "get" on all files
+				currently edited
+	sccs -R unedit		removed _all_ edited files be careful!
+	sccs -R val		Lists all corrupted SCCS history files
+	sccs -R val -T		Gives more information on all corrupted 
+				SCCS history files, to help to fix them.
+
+	There are more sub-commands that support -R
+
+	For sub-commands that (currently) do not support recursion, the
+	following message is printed:
+
+	sccs -R admin
+	sccs: Recursion not supported for "admin"
+
+	*** Please test and report!
+
+-	SCCS get and SCCS delta implement a (hidden) option -Cdir to
+	support recursive operation with sccs(1).
+
+-	SCCS get -k now works correctly even if someone previously called
+	sccs admin -fy...
+
+-	SCCS get(1) now has new keywords %d% %e% %g% %h% with
+	4 digit year strings
+
+	sccs get ... only expands the new four digit-year keywords
+	%d% %e% %g% %h% if the 'x' flag has been set with sccs admin or
+	if the related keyword has been exlicitely enabled via the 'y'
+	flag.
+
+	This has been done because the probabiltiy thar lower case characters
+	from printf() format strings incorrectly match sccs keywords is too high.
+
+-	SCCS get(1) now implements the BSD-4.x keyword %sccs.include.filename%
+	use sccs admin -fy* for selectively enabling/disabling this feature
+	The file "filename" is searched in the path from the environment
+	SCCS_INCLUDEPATH
+
+-	On platforms without strftime(3), sccs get now correctly creates
+	2 digit strings for Month and Day according to the man page
+
+-	SCCS prs(1) now has new keywords :d: :DY: with 4 digit year strings
+
+-	sccs help now supports new help target "get_keywds" for a list with
+	get(1) keywords
+
+-	sccs help now includes help for the sccs(1) command
+
+-	SCCS commands now all support -V/--version to verify the
+	current version.
+
+-	All commands now use vfork() if available in order to speed things
+	up and in order to permit to support VMS.
+
+-	SCCS now installs a "sccs" symlink to /opt/schily/bin
+
+-	The sccs-admin man page is now complete
+
+-	Many small enhancements of all man pages
+
+-	All SCCS commands now open files using O_BINARY on platforms where
+	this is needed
+
+-	SCCS admin now supports a new flag 'x' to enable Schily specific enhancements
+
+-	All SCCS commands now create 4 digit year numbers in all files in case
+	that the related date is past January 19 2038. 
+
+	This is no problem as all relevant SCCS implementations have been
+	enhanced to understand and to silently accept 4 digit year numbers in 1999.
+
+	This is useful, as you need 64 bit SCCS binaries anyway in order to deal
+	with later dates.
+
+-	All SCCS code is now 64 bit clean.
+
+-	All SCCS programs now link to libintl for localized strings.
+
+-	SCCS "val" now supports directory type command line arguments that
+	result in scanning the related directory for s. files.
+
+-	The val(1) cmmand now includes a -T (debug) option that allows to get 
+	much better mesages when a SCCS history file is corrupted. Use:
+	sccs val -T filename
+
+-	The SCCS man pages have been enhanced in order to include the -V (retrieve
+	program version) option.
+
+-	The man page sccsfile.1 now mentiones the new 'x' flag for the enhanced SCCS
+	keywords.
+
+-	The man page for sccs.1 and val.1 now mention the -T option
+
+-	Added missing directories to the SCCS package description file.
+
+-	The included diff(1) command now supports wide chars
+
+-	The included diff(1) command now supports the -N option
+
+-	sccslog(1) now detects currupted history files
+
+-	sccslog(1) now deals with very old SCCS history files (from 1980 and before)
+	that may have no delta comment at all.
+
+-	sccslog(1) now implements a (hidden) option -Cdir to
+	support recursive operation with sccs(1).
+
+-	sccs(1) now supports a new subcommand "ldiffs" to call the platform local
+	diff(1) implementation instead of the diff implementation delivered with
+	SCCS.
+
+-	A compile variant of the SCCS system (use "smake COPTX=-DGMT_TIME")
+	that results is a SCCS system that archives GMT based times inside
+	the SCCS history files has been made more more robust and more correct.
+
+	This compile variant has been introduced by Sun a while ago, but it
+	was not cleanly portable and it did not work correctly when close to
+	a DST switch time, as it abused the function localtime(), introduced
+	math based on "timezone" and assumed that all DST variants add one
+	hour to the winter time.
+
+	The new code is based on a new function mkgmtime() that only needs
+	to know the Gregorian calendar and based on correct usage of the POSIX
+	time functions. 
+
+	The change is a preparation for a future enhancement to SCCS that
+	will make it time zone independent.
+
+------------ Included in Beta-2
+
+-	SCCS now checks whether the 'x' flag in the SCCS history files has the
+	tag "SCHILY", as the SCO sccs implementation uses the x flag for setting
+	the executable permission on files.
+
+-	SCCS now warns if currently unsupported uppercase flags are present in
+	a history file.
+
+-	sccs help now includes help for all help codes
+
+-	The sccsfile.4 man page now mentiones that year numbers may be 4 digit
+	numbers also.
+
+-	The sccslog(1) command now implements a new option -a to control the way
+	sccslog collects deltas with the same delta comment in case they happen 
+	within 24 hours. Not collecting such deltas makes it easier to understand
+	the exact time line in changes for many files that belong to a common
+	project.
+
+	sccslog -a will still collect time stamps that differ less than a minute
+	sccslog -aa will not collect time stamps if they differ more than a
+	second
+
+-	The diff(1) command delivered with SCCS now outputs the correct time stamp
+	format for unified diffs (-u) as required by POSIX. This is needed in order
+	to be able to automatically remove removed files by patch(1).
+
+-	The SCCS commands now switch to 4 digit year numbers in SCCS files when
+	the year 2038 starts. This makes it easier to write shell scripts that
+	work on SCCS files.
+
+-	Since SCCS no longer uses the libc variable "timezone", a call to tzset()
+	is no longer required. Since SCCS now switches to a 4 digit year format
+	at the beginning of Y2038 local time, we need to call tzset() again, but
+	we now do it in main() for each related tool.
+
+-	The leap year functions did not correctly know that February 2000 has
+	29 days. This was a result from switching to a correct Gregorian leap
+	year algorithm but using year-1900 as a parameter to the mosize()
+	function.
+
+-	SCCS comb now writes a shell script that has $(INS_BASE)/ccs/bin in
+	front of PATH.
+
+-	SCCS sccsdiff now has $(INS_BASE)/ccs/bin in front of PATH.
+
+-	The string parsing functions now stop when encountering a null byte at
+	the end of a line and thus no longer cause core dumps with corrupted
+	SCCS history files.
+
+-	SCCS val now checks for missing usernames in delta table lines. Missing
+	usernames have been a frequent problem with SCCS releases until
+	around 1982. Recent SCCS versions abort before modifying files when the
+	username appears to be empty.
+
+-	SCCS val now can check for non-monotone time stamps in SCCS history
+	files. SCCS creates time stamps but never really uses them except when
+	a cut-off time has been specified. Call val -T to enable this check.
+	The exit code will not change and only a warning will be emmited in case
+	of a non-monotonic time.
+
+-	The SCCS admin command now supports a new option -o that uses the
+	original file time for the initial delta instead of using the current
+	time.
+
+-	The SCCS delta command now wupports a new option -o that uses the
+	original file time for the delta instead of using the current time.
+
+-	The sccs command now avoids a GCC warning related to array of struct
+	initialization.
+
+-	The SCCS admin and delta man pages now mention -o
+
+-	The SCCS val man page now includes a better description for the debug
+	option -T.
+
+-	The sccs.1 man page now contains an overview on the subcommands
+
+-	The sccs.1 man page now mentions the new option -o for "admin" and
+	"delta" and for related pseudo commands.
+
+
+SCCS now has been tested to compile and work on the following platforms:
+
+-	SunOS-4.x
+
+-	SunOS-5.x (Solaris 2.x, 7, 8, 9, 10, 11)
+
+-	FreeBSD
+
+-	HP-UX
+
+-	Linux
+
+-	Mac OS X
+
+-	AIX
+
+-	IRIX
+
+-	VMS
+
+-	Cygwin
+
+The portability now reached a state that should allow SCCS to compile 
+and run on other platforms too. SCCS compiles and has been verified
+on all major platforms.
+
+J?rg
+
+-- 
+ EMail:joerg at schily.isdn.cs.tu-berlin.de (home) J?rg Schilling D-13353 Berlin
+       js at cs.tu-berlin.de                (uni)  
+       joerg.schilling at fokus.fraunhofer.de (work) Blog: http://schily.blogspot.com/
+ URL:  http://cdrecord.berlios.de/private/ ftp://ftp.berlios.de/pub/schily
+
+
